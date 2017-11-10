@@ -17,6 +17,8 @@ class Comment(models.Model):
     """
     course = models.ForeignKey(Course, related_name="comments")
     text = models.TextField()
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text[0: 50]

@@ -29,7 +29,9 @@ class CoursesView(View):
             result[course.id] = {
                 "name": course.name,
                 "comments": [{"id": comment.id,
-                              "text": comment.text} for comment in course.comments.all()]
+                              "text": comment.text,
+                              "likes": comment.likes,
+                              "dislikes": comment.dislike} for comment in course.comments.all()]
             }
         return JsonResponse(result)
 
@@ -52,4 +54,3 @@ class CommentView(View):
         except:
             status = "Error processing json"
         return JsonResponse({"status": status})
-
