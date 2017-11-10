@@ -21,5 +21,5 @@ from electivos import views as electivos_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', electivos_views.Index.as_view(), name="home"),
-    url(r'rest/', include('electivos.urls'))
+    url(r'^', include('electivos.urls'))
 ]

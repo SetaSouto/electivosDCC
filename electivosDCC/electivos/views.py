@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
 
+from electivos.models import Course
+
 
 class Index(TemplateView):
     """
@@ -19,4 +21,4 @@ class CoursesView(View):
         """
         Answer the get request.
         """
-        return JsonResponse({})
+        return JsonResponse({"courses": list(Course.objects.all().values())})
