@@ -14,11 +14,18 @@ class Index(TemplateView):
 
 class CoursesView(View):
     """
-    Return a json with all the data.
+    Return a json with all the data of the courses.
     """
 
     def get(self, request, *args, **kwargs):
         """
         Answer the get request.
         """
-        return JsonResponse({"courses": list(Course.objects.all().values())})
+        courses = Course.objects.all()
+        result = {}
+        for course in courses:
+            result[course.id] = {
+                "name": course.name,
+                "comments": [comment.text for comment in course.comments.all()]
+            }
+        return JsonResponse(result)
