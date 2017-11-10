@@ -1,3 +1,22 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.views import View
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class Index(TemplateView):
+    """
+    Returns the index view, the homepage.
+    """
+    template_name = "electivos/index.html"
+
+
+class CoursesView(View):
+    """
+    Return a json with all the data.
+    """
+
+    def get(self, request, *args, **kwargs):
+        """
+        Answer the get request.
+        """
+        return JsonResponse({})
