@@ -1,0 +1,3 @@
+[submodule "electivosDCC-frontend"]
+	path = electivosDCC-frontend
+	url = https://github.com/PabloReszczynski/electivosDCC-frontend.git
