@@ -39,10 +39,15 @@ class CommentView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        id = data["courseId"]
-        status = "Error, course does not exists"
-        if Course.objects.filter(id=id).exists():
-            Comment.objects.create(course=Course.objects.get(id=id), text=data["comment"])
-            status = "Success"
+        try:
+            data = json.loads(request.body)
+            if not ("courseId" in data and "comment" in data):
+                status = "Error, json must be {courseId: Number, comment: String}"
+            else:
+                status = "Error, course does not exists"
+                if Course.objects.filter(id=data["courseId"]).exists():
+                    Comment.objects.create(course=Course.objects.get(id=data["courseId"]), text=data["comment"])
+                    status = "Success"
+        except:
+            status = "Error processing json"
         return JsonResponse({"status": status})
