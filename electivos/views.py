@@ -28,7 +28,10 @@ class CoursesView(View):
         for course in courses:
             result[course.id] = {
                 "name": course.name,
-                "comments": [comment.text for comment in course.comments.all()]
+                "comments": [{"id": comment.id,
+                              "text": comment.text,
+                              "likes": comment.likes,
+                              "dislikes": comment.dislikes} for comment in course.comments.all()]
             }
         return JsonResponse(result)
 
@@ -39,10 +42,34 @@ class CommentView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        id = data["courseId"]
-        status = "Error, course does not exists"
-        if Course.objects.filter(id=id).exists():
-            Comment.objects.create(course=Course.objects.get(id=id), text=data["comment"])
-            status = "Success"
+        try:
+            data = json.loads(request.body)
+            if not ("courseId" in data and "comment" in data):
+                status = "Error, json must be {courseId: Number, comment: String}"
+            else:
+                status = "Error, course does not exists"
+                if Course.objects.filter(id=data["courseId"]).exists():
+                    Comment.objects.create(course=Course.objects.get(id=data["courseId"]), text=data["comment"])
+                    status = "Success"
+        except:
+            status = "Error processing json"
+        return JsonResponse({"status": status})
+
+
+class LikeView(View):
+    """
+    Handles a like post.
+    """
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            status = "Error, comment does not exists"
+            if "id" in data and Comment.objects.filter(id=data["id"]).exists():
+                c = Comment.objects.get(id=data["id"])
+                c.likes += 1
+                c.save()
+                status = "Success"
+        except:
+            status = "Error processing json"
         return JsonResponse({"status": status})
