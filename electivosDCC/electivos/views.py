@@ -1,8 +1,10 @@
+import json
+
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
 
-from electivos.models import Course
+from electivos.models import Course, Comment
 
 
 class Index(TemplateView):
@@ -29,3 +31,18 @@ class CoursesView(View):
                 "comments": [comment.text for comment in course.comments.all()]
             }
         return JsonResponse(result)
+
+
+class CommentView(View):
+    """
+    Handles the post to create a comment.
+    """
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        id = data["courseId"]
+        status = "Error, course does not exists"
+        if Course.objects.filter(id=id).exists():
+            Comment.objects.create(course=Course.objects.get(id=id), text=data["comment"])
+            status = "Success"
+        return JsonResponse({"status": status})

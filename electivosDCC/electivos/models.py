@@ -7,6 +7,9 @@ class Course(models.Model):
     """
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class Comment(models.Model):
     """
@@ -14,3 +17,6 @@ class Comment(models.Model):
     """
     course = models.ForeignKey(Course, related_name="comments")
     text = models.TextField()
+
+    def __str__(self):
+        return self.text[0: 50]
