@@ -11,14 +11,24 @@ class TestViews(TestCase):
         self.client = Client()
         # create some data
         self.data = {"name": "Apps web", "comments": ["Buen curso", "entrete"]}
-        c = Course.objects.create(name=self.data["name"])
-        Comment.objects.create(course=c, text=self.data["comments"][0])
-        Comment.objects.create(course=c, text=self.data["comments"][1])
+        self.course = Course.objects.create(name=self.data["name"])
+        Comment.objects.create(course=self.course, text=self.data["comments"][0])
+        Comment.objects.create(course=self.course, text=self.data["comments"][1])
 
     def test_get_courses(self):
+        expected = {"electivos": [{
+            "name": self.course.name,
+            "id": self.course.id,
+            "comments": [{"id": comment.id,
+                          "txt": comment.text,
+                          "votes": {
+                              "up": comment.likes,
+                              "down": comment.dislikes
+                          }} for comment in self.course.comments.all()]
+        }]}
+
         response = self.client.get(reverse("electivos:courses"))
         self.assertEqual(200, response.status_code)
-        expected = {"1": self.data}
         self.assertEqual(expected, json.loads(response.content))
 
     def test_post_comment(self):
