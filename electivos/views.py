@@ -24,16 +24,19 @@ class CoursesView(View):
         Answer the get request.
         """
         courses = Course.objects.all()
-        result = {}
+        electivos = []
         for course in courses:
-            result[course.id] = {
+            electivos.append({
                 "name": course.name,
+                "id": course.id,
                 "comments": [{"id": comment.id,
-                              "text": comment.text,
-                              "likes": comment.likes,
-                              "dislikes": comment.dislikes} for comment in course.comments.all()]
-            }
-        return JsonResponse(result)
+                              "txt": comment.text,
+                              "votes": {
+                                  "up": comment.likes,
+                                  "down": comment.dislikes,
+                              }} for comment in course.comments.all()]
+            })
+        return JsonResponse({"electivos": electivos})
 
 
 class CommentView(View):
