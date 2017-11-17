@@ -1,1 +1,1 @@
-web: gunicorn electivosDCC.wsgi --log-file -
+web: sh build_front.sh; gunicorn electivosDCC.wsgi --log-file -
