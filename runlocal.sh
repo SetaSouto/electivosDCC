@@ -1,21 +1,22 @@
 # Script that automatizes deployment of electivosDCC in localhost
 #!/bin/bash
 
+FRONTDIR=$PWD/electivosDCC-frontend
 HOME=$PWD
 
 # Install NPM dependencies
-cd $HOME/electivosDCC-frontend
-# npm install
-# npm run build
+cd $FRONTDIR
+npm install
+npm run build
 
 # Update
-cp build/{,asset-}manifest.json ../electivos/static/electivos -v
-rm ../electivos/static/electivos/css/* -v
-cp build/static/css/*.css ../electivos/static/electivos/css/ -v
-rm ../electivos/static/electivos/js/* -v
-cp build/static/js/*.js ../electivos/static/electivos/js/ -v
+cp $FRONTDIR/build/{,asset-}manifest.json $HOME/electivos/static/electivos -v
+rm $HOME/electivos/static/electivos/css/* -v
+cp $FRONTDIR/build/static/css/*.css $HOME/electivos/static/electivos/css/ -v
+rm $HOME/electivos/static/electivos/js/* -v
+cp $FRONTDIR/build/static/js/*.js $HOME/electivos/static/electivos/js/ -v
 
-cd $HOME/
+cd $HOME
 
 # FIXME Editar templates/electivos/index.html (línea 13 y 18) y actualizar los hashes
 # Se podría hacer con `sed`
@@ -34,7 +35,7 @@ python manage.py migrate
 python manage.py runserver &
 P1=$! # Save PID
 
-cd $HOME/electivosDCC-frontend
+cd $FRONTDIR
 
 npm run start &
 P2=$! # Save PID
