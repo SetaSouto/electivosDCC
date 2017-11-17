@@ -35,13 +35,44 @@ class TestViews(TestCase):
         url = reverse("electivos:comment")
 
         # MUST WORK
-        data = {"courseId": 1, "comment": "Lo pasé super bien"}
+        data = {"id": 1, "comment": "Lo pasé super bien"}
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(200, response.status_code)
         self.assertEqual({"status": "Success"}, json.loads(response.content))
 
         # MUST GIVE ERRORS
-        for data in [{}, {"courseId": 2, "comment": "Buen curso"}]:
+        for data in [{}, {"id": 2, "comment": "Buen curso"}]:
             response = self.client.post(url, json.dumps(data), content_type="application/json")
-            self.assertEqual(200, response.status_code)
+            self.assertEqual(400, response.status_code)
             self.assertNotEqual({"status": "Success"}, json.loads(response.content))
+
+    def test_likes_dislikes(self):
+        url_like = reverse("electivos:like")
+        url_dislike = reverse("electivos:dislike")
+
+        # WRONG ID
+        data = {"id": "not an id"}
+
+        response = self.client.post(url_like, json.dumps(data), content_type="application/json")
+
+        self.assertEqual(400, response.status_code)
+
+        # CREATE COMMENT
+
+        comment = Comment.objects.create(course=self.course, text="Random comment")
+
+        data = {"id": comment.id}
+
+        # LIKE
+        response = self.client.post(url_like, json.dumps(data), content_type="application/json")
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, Comment.objects.get(id=comment.id).likes)
+        self.assertEqual({"status": "Success"}, json.loads(response.content))
+
+        # DISLIKE
+        response = self.client.post(url_dislike, json.dumps(data), content_type="application/json")
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(1, Comment.objects.get(id=comment.id).dislikes)
+        self.assertEqual({"status": "Success"}, json.loads(response.content))
