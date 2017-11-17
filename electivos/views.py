@@ -1,8 +1,10 @@
 import json
 
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
+from django.template import loader
 
 from electivos.models import Course, Comment
 
@@ -11,7 +13,8 @@ class Index(TemplateView):
     """
     Returns the index view, the homepage.
     """
-    template_name = "electivos/index.html"
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(loader.get_template('build/index.html').render())
 
 
 class CoursesView(View):
@@ -42,37 +45,66 @@ class CoursesView(View):
 class CommentView(View):
     """
     Handles the post to create a comment.
+    Receives a JSON as {"id": id of the course, "comment": String}
     """
 
     def post(self, request, *args, **kwargs):
+        status_code = 400
         try:
             data = json.loads(request.body)
-            if not ("courseId" in data and "comment" in data):
-                status = "Error, json must be {courseId: Number, comment: String}"
+            if not ("id" in data and "comment" in data):
+                status = "Error, json must be {id: Number, comment: String}"
             else:
                 status = "Error, course does not exists"
-                if Course.objects.filter(id=data["courseId"]).exists():
-                    Comment.objects.create(course=Course.objects.get(id=data["courseId"]), text=data["comment"])
+                if Course.objects.filter(id=data["id"]).exists():
+                    Comment.objects.create(course=Course.objects.get(id=data["id"]), text=data["comment"])
                     status = "Success"
+                    status_code = 200
         except:
             status = "Error processing json"
-        return JsonResponse({"status": status})
+        return JsonResponse({"status": status}, status=status_code)
 
 
-class LikeView(View):
+class BaseLikesView(View):
     """
-    Handles a like post.
+    Base class to handle the request to like/dislike a comment.
     """
+
+    def handle_action(self):
+        """
+        Handles the action, the comment object is in self.comment.
+        """
+        raise NotImplementedError()
 
     def post(self, request, *args, **kwargs):
+        status_code = 400
         try:
             data = json.loads(request.body)
             status = "Error, comment does not exists"
             if "id" in data and Comment.objects.filter(id=data["id"]).exists():
-                c = Comment.objects.get(id=data["id"])
-                c.likes += 1
-                c.save()
+                self.comment = Comment.objects.get(id=data["id"])
+                self.handle_action()
+                self.comment.save()
                 status = "Success"
+                status_code = 200
         except:
             status = "Error processing json"
-        return JsonResponse({"status": status})
+        return JsonResponse({"status": status}, status=status_code)
+
+
+class LikeView(BaseLikesView):
+    """
+    Handles a like post.
+    """
+
+    def handle_action(self):
+        self.comment.likes += 1
+
+
+class DislikeView(BaseLikesView):
+    """
+    Handles the dislike post.
+    """
+
+    def handle_action(self):
+        self.comment.dislikes += 1
