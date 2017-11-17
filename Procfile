@@ -1,1 +1,1 @@
-web: gunicorn electivosDCC.wsgi --log-file -
+web: npm run start; gunicorn electivosDCC.wsgi --log-file -
