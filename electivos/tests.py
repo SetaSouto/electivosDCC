@@ -38,7 +38,8 @@ class TestViews(TestCase):
         data = {"id": 1, "comment": "Lo pasé super bien"}
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(200, response.status_code)
-        self.assertEqual({"status": "Success"}, json.loads(response.content))
+        self.assertEqual({"status": "Success", "id": Comment.objects.get(text=data["comment"]).id},
+                         json.loads(response.content))
 
         # MUST GIVE ERRORS
         for data in [{}, {"id": 2, "comment": "Buen curso"}]:

@@ -47,6 +47,7 @@ class CommentView(View):
 
     def post(self, request, *args, **kwargs):
         status_code = 400
+        createdComment = None
         try:
             data = json.loads(request.body)
             if not ("id" in data and "comment" in data):
@@ -54,12 +55,15 @@ class CommentView(View):
             else:
                 status = "Error, course does not exists"
                 if Course.objects.filter(id=data["id"]).exists():
-                    Comment.objects.create(course=Course.objects.get(id=data["id"]), text=data["comment"])
+                    createdComment = Comment.objects.create(course=Course.objects.get(id=data["id"]),
+                                                            text=data["comment"])
                     status = "Success"
                     status_code = 200
         except:
             status = "Error processing json"
-        return JsonResponse({"status": status}, status=status_code)
+        response = {"status": status}
+        if (createdComment): response["id"] = createdComment.id
+        return JsonResponse(response, status=status_code)
 
 
 class BaseLikesView(View):
