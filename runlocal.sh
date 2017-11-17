@@ -17,7 +17,7 @@ cp build/static/js/*.js ../electivos/static/electivos/js/ -v
 
 cd $HOME/
 
-# TODO Editar templates/electivos/index.html (línea 13 y 18) y actualizar los hashes
+# FIXME Editar templates/electivos/index.html (línea 13 y 18) y actualizar los hashes
 # Se podría hacer con `sed`
 
 # Virtual Environment
