@@ -1,25 +1,18 @@
 # Script that automatizes deployment of electivosDCC in localhost
 #!/bin/bash
 
-FRONTDIR=$PWD/electivosDCC-frontend
-HOME=$PWD
+FRONTDIR=$PWD/front
+BASEDIR=$PWD
+
+git submodule init 
+git submodule update
 
 # Install NPM dependencies
 cd $FRONTDIR
 npm install
 npm run build
 
-# Update
-cp $FRONTDIR/build/{,asset-}manifest.json $HOME/electivos/static/electivos -v
-rm $HOME/electivos/static/electivos/css/* -v
-cp $FRONTDIR/build/static/css/*.css $HOME/electivos/static/electivos/css/ -v
-rm $HOME/electivos/static/electivos/js/* -v
-cp $FRONTDIR/build/static/js/*.js $HOME/electivos/static/electivos/js/ -v
-
-cd $HOME
-
-# FIXME Editar templates/electivos/index.html (línea 13 y 18) y actualizar los hashes
-# Se podría hacer con `sed`
+cd $BASEDIR
 
 # Virtual Environment
 if [[ ! -e "venv/bin/python3" ]]; then
