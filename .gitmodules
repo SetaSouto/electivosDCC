@@ -1,6 +1,0 @@
-[submodule "front"]
-	path = front
-	url = https://github.com/PabloReszczynski/electivosDCC-frontend.git
-[submodule "electivosDCC-front"]
-	path = electivosDCC-front
-	url = https://github.com/PabloReszczynski/electivosDCC-frontend.git
