@@ -1,10 +1,8 @@
 import json
 
 from django.http import JsonResponse
-from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
-from django.template import loader
 
 from electivos.models import Course, Comment
 
@@ -13,8 +11,7 @@ class Index(TemplateView):
     """
     Returns the index view, the homepage.
     """
-    def get(self, request, *args, **kwargs):
-        return HttpResponse(loader.get_template('build/index.html').render())
+    template_name = "electivos/index.html"
 
 
 class CoursesView(View):
