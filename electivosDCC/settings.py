@@ -22,7 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("PRODUCTION", False))
+ALLOWED_HOSTS = ['*']
+ADMINS = [('Fabián Souto Gmail', 'fab.souto@gmail.com'), ]
+DEBUG = bool(os.getenv("PRODUCTION", True))
 
 # SECURITY AND ENCRYPTION: https://docs.djangoproject.com/en/1.11/topics/security/
 if os.getenv("PRODUCTION", False):
@@ -32,8 +34,6 @@ if os.getenv("PRODUCTION", False):
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
     X_FRAME_OPTIONS = 'DENY'
-
-ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
