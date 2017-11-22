@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # OUR APPS
-    'electivos.apps.ElectivosConfig'
+    'electivos.apps.ElectivosConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'electivosDCC.urls'
@@ -137,3 +140,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = (
+    os.path.join(os.path.join(BASE_DIR, 'electivosDCC-frontend'), 'build',
+                 'static'),
+)
+
+CORS_ORIGIN_WHITELIST = (
+    'https://radiant-harbor-85666.herokuapp.com',
+);
+
+CORS_ORIGIN_ALLOW_ALL = True

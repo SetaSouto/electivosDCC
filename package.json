@@ -1,0 +1,21 @@
+{
+  "name": "electivosdcc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "build": "sh build_front.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SetaSouto/electivosDCC.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SetaSouto/electivosDCC/issues"
+  },
+  "homepage": "https://github.com/SetaSouto/electivosDCC#readme"
+}
