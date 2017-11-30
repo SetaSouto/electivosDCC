@@ -146,7 +146,7 @@ STATICFILES_DIRS = (
 )
 
 CORS_ORIGIN_WHITELIST = (
-    'https://radiant-harbor-85666.herokuapp.com',
+    'https://electivos.herokuapp.com',
 );
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
