@@ -146,7 +146,7 @@ STATICFILES_DIRS = (
 )
 
 CORS_ORIGIN_WHITELIST = (
-    'https://electivos.herokuapp.com',
+    'electivos.herokuapp.com',
 );
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = DEBUG
